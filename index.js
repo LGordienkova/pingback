@@ -1,6 +1,7 @@
 const express = require('express');
 const http = require('http');
 const socketio = require('socket.io');
+const PORT = process.env.PORT || 1337;
 
 const data = [{}];
 
@@ -31,4 +32,4 @@ app
   })
   .use(express.static('./public'))
 
-server.listen(1337, () => { console.log('Listening on :1337'); })
+server.listen(PORT, () => { console.log(`Listening on :${PORT}`); })
