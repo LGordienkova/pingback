@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<style>
+  @font-face {
+    font-family: "Fantasque Sans Mono";
+    src: url('fantasque.ttf');
+  }
+
+  @keyframes Gradient {
+    0% {
+      background-position: 0% 50%
+    }
+    50% {
+      background-position: 100% 50%
+    }
+    100% {
+      background-position: 0% 50%
+    }
+  }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    background-image: linear-gradient(-45deg, #EE7752, #E73C7E, #23A6D5, #23D5AB);
+    background-size: 400% 400%;
+    animation: Gradient 15s ease infinite;
+  }
+
+  code {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font: normal 32px/1.2em 'FantasqueSansMono', monospace;
+    color: #fff;
+    text-shadow: 0 1px 0 rgba(0,0,0,0.7);
+    cursor: default;
+    white-space: pre;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+    width: 90%;
+    max-height: 90%;
+  }
+
+  code:last-child {
+    opacity: 1;
+  }
+
+  code.hidden:last-child {
+    opacity: 0;
+  }
+</style>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+const render = (object) => {
+  const json = JSON.stringify(object, null, 2);
+
+  const code = document.createElement('code');
+  code.classList.add('hidden');
+  code.appendChild( document.createTextNode(json) );
+  document.querySelector('body').appendChild(code);
+  setTimeout(() => code.classList.remove('hidden'));
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
+  const socket = io();
+
+  const data = await fetch('/q/latest').then(res => res.json());
+  render(data);
+
+  socket.on('new data', (object) => {
+    render(object);
+  })
+});
+
+</script>
+<body>
